@@ -39,7 +39,7 @@ fixtureShouldMatch path expected = do
 
 spec :: Spec
 spec = do
-  it "can decode CheckSuiteEvent"      $ fixtureShouldMatch "fixtures/check-suite-event.json" checkSuiteEventFixture
+  it "can decode CheckSuiteEvent"         $ fixtureShouldMatch "fixtures/check-suite-event.json" checkSuiteEventFixture
   it "can decode CommitCommentEvent"      $ fixtureShouldMatch "fixtures/commit-comment-event.json" commitCommentEventFixture
   it "can decode CreateEvent"             $ fixtureShouldMatch "fixtures/create-event.json" createEventFixture
   it "can decode DeleteEvent"             $ fixtureShouldMatch "fixtures/delete-event.json" deleteEventFixture

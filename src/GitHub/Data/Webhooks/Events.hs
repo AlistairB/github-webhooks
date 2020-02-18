@@ -11,6 +11,9 @@ module GitHub.Data.Webhooks.Events
     ( EventHasSender(..)
     , EventHasRepo(..)
       --
+    , CheckSuiteEventAction(..)
+    , CheckSuiteEvent(..)
+      --
     , CommitCommentEvent(..)
     , CommitCommentEventAction(..)
       --
@@ -156,11 +159,11 @@ data CheckSuiteEvent = CheckSuiteEvent
     , evCheckSuiteCheckSuite          :: !HookCheckSuite
     , evCheckSuiteHeadSha             :: !(Maybe Text)
     , evCheckSuiteBeforeSha           :: !(Maybe Text)
-    , evCheckSuiteHeadCommit          :: !(Maybe HookCommit)
+    , evCheckSuiteHeadCommit          :: !(Maybe HookCheckSuiteCommit)
     , evCheckSuiteRepository          :: !HookRepository
     , evCheckSuiteOrganization        :: !(Maybe HookOrganization)
     , evCheckSuiteSender              :: !HookUser
-    , evCheckSuiteInstallation        :: !HookInstallationSimple
+    , evCheckSuiteInstallation        :: !(Maybe HookCheckSuiteInstallation)
     }
     deriving (Eq, Show, Typeable, Data, Generic)
 

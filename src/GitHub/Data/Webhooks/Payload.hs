@@ -30,13 +30,19 @@ module GitHub.Data.Webhooks.Payload
     , HookProjectColumn(..)
     , HookIssueLabels(..)
     , HookCommit(..)
+    , HookCheckSuiteStatus(..)
+    , HookCheckSuiteConclusion(..)
     , HookCheckSuite(..)
+    , HookCheckSuiteCommit(..)
+    , HookCheckSuiteInstallation(..)
+    , HookChecksPullRequest(..)
+    , HookChecksPullRequestRepository(..)
+    , HookChecksPullRequestTarget(..)
     , HookRelease(..)
     , HookPullRequest(..)
     , PullRequestTarget(..)
     , HookPullRequestReview(..)
     , HookInstallation(..)
-    , HookInstallationSimple(..)
     , HookDeployment(..)
     , HookDeploymentStatus(..)
     , HookWikiPage(..)
@@ -487,6 +493,24 @@ data HookCheckSuite = HookCheckSuite
 
 instance NFData HookCheckSuite where rnf = genericRnf
 
+-- | Represents the "head_commit" field in the 'CheckSuiteEvent' payload.
+data HookCheckSuiteCommit = HookCheckSuiteCommit
+    { whHookCheckSuiteCommitSha               :: !Text          -- ^ Sometimes called the commit 'id'.
+    , whHookCheckSuiteCommitAuthor            :: !HookSimpleUser
+    , whHookCheckSuiteCommitCommitter         :: !HookSimpleUser
+    }
+    deriving (Eq, Show, Typeable, Data, Generic)
+
+instance NFData HookCheckSuiteCommit where rnf = genericRnf
+
+-- | Represents the "installation" field in the 'CheckSuiteEvent' payload.
+newtype HookCheckSuiteInstallation = HookCheckSuiteInstallation
+    { whInstallationSimpleId    :: Int
+    }
+    deriving (Eq, Show, Typeable, Data, Generic)
+
+instance NFData HookCheckSuiteInstallation where rnf = genericRnf
+
 data HookChecksPullRequest = HookChecksPullRequest
     { whHookChecksPullRequestUrl              :: !URL
     , whHookChecksPullRequestId               :: !Int
@@ -498,15 +522,6 @@ data HookChecksPullRequest = HookChecksPullRequest
 
 instance NFData HookChecksPullRequest where rnf = genericRnf
 
-data  HookChecksPullRequestTarget = HookChecksPullRequestTarget
-    { whHookChecksPullRequestTargetSha  :: !Text
-    , whHookChecksPullRequestTargetRef  :: !Text -- ex "somebranch"
-    , whHookChecksPullRequestTargetRepo :: !HookChecksPullRequestRepository
-    }
-    deriving (Eq, Show, Typeable, Data, Generic)
-
-instance NFData HookChecksPullRequestTarget where rnf = genericRnf
-
 data HookChecksPullRequestRepository = HookChecksPullRequestRepository
     { whHookChecksPullRequestRepositoryId                  :: !Int
     , whHookChecksPullRequestRepositoryName                :: !Text
@@ -516,14 +531,14 @@ data HookChecksPullRequestRepository = HookChecksPullRequestRepository
 
 instance NFData HookChecksPullRequestRepository where rnf = genericRnf
 
-data HookCheckSuiteCommit = HookCheckSuiteCommit
-    { whHookCheckSuiteCommitSha               :: !Text          -- ^ Sometimes called the commit 'id'.
-    , whHookCheckSuiteCommitAuthor            :: !HookSimpleUser
-    , whHookCheckSuiteCommitCommitter         :: !HookSimpleUser
+data  HookChecksPullRequestTarget = HookChecksPullRequestTarget
+    { whHookChecksPullRequestTargetSha  :: !Text
+    , whHookChecksPullRequestTargetRef  :: !Text -- ex "somebranch"
+    , whHookChecksPullRequestTargetRepo :: !HookChecksPullRequestRepository
     }
     deriving (Eq, Show, Typeable, Data, Generic)
 
-instance NFData HookCheckSuiteCommit where rnf = genericRnf
+instance NFData HookChecksPullRequestTarget where rnf = genericRnf
 
 --- FIXME: Missing nested metadata that provides commit description
 --- FIXME: Missing property "parent" (no examples provided)
@@ -640,14 +655,6 @@ data HookInstallation = HookInstallation
     deriving (Eq, Show, Typeable, Data, Generic)
 
 instance NFData HookInstallation where rnf = genericRnf
-
--- | Represents the "installation" field in the 'CheckSuiteEvent' payload.
-newtype HookInstallationSimple = HookInstallationSimple
-    { whInstallationSimpleId    :: Int
-    }
-    deriving (Eq, Show, Typeable, Data, Generic)
-
-instance NFData HookInstallationSimple where rnf = genericRnf
 
 -- | Represents the "deployment" field in the
 -- 'DeploymentEvent' and 'DeploymentStatusEvent' payload.
@@ -1030,6 +1037,10 @@ instance FromJSON HookCheckSuiteCommit where
       <*> o .: "author"
       <*> o .: "committer"
 
+instance FromJSON HookCheckSuiteInstallation where
+  parseJSON = withObject "HookCheckSuiteInstallation" $ \o -> HookCheckSuiteInstallation
+      <$> o .: "id"
+
 instance FromJSON HookChecksPullRequest where
   parseJSON = withObject "HookChecksPullRequest" $ \o -> HookChecksPullRequest
       <$> o .: "url"
@@ -1142,10 +1153,6 @@ instance FromJSON HookInstallation where
       <*> o .: "repository_selection"
       <*> o .: "access_tokens_url"
       <*> o .: "repositories_url"
-
-instance FromJSON HookInstallationSimple where
-  parseJSON = withObject "HookInstallationSimple" $ \o -> HookInstallationSimple
-      <$> o .: "id"
 
 instance FromJSON HookDeployment where
   parseJSON = withObject "HookDeployment" $ \o -> HookDeployment
