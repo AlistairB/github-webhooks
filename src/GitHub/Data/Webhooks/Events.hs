@@ -139,6 +139,8 @@ data CheckSuiteEventAction
     | CheckSuiteEventActionOther !Text
     deriving (Eq, Ord, Show, Generic, Typeable, Data)
 
+instance NFData CheckSuiteEventAction where rnf = genericRnf
+
 instance FromJSON CheckSuiteEventAction where
   parseJSON = withText "Check suite event action" $ \t ->
       case t of
@@ -154,22 +156,17 @@ data CheckSuiteEvent = CheckSuiteEvent
     , evCheckSuiteCheckSuite          :: !HookCheckSuite
     , evCheckSuiteHeadSha             :: !(Maybe Text)
     , evCheckSuiteBeforeSha           :: !(Maybe Text)
-    , evCheckSuiteCreated             :: !Bool
-    , evCheckSuiteDeleted             :: !Bool
-    , evCheckSuiteForced              :: !Bool
-    , evCheckSuiteBaseRef             :: !(Maybe Text)
-    , evCheckSuiteCompareUrl          :: !URL
-    , evCheckSuiteCommits             :: !(Maybe (Vector HookCommit))
     , evCheckSuiteHeadCommit          :: !(Maybe HookCommit)
     , evCheckSuiteRepository          :: !HookRepository
     , evCheckSuiteOrganization        :: !(Maybe HookOrganization)
     , evCheckSuiteSender              :: !HookUser
+    , evCheckSuiteInstallation        :: !HookInstallation
     }
     deriving (Eq, Show, Typeable, Data, Generic)
 
 instance EventHasSender CheckSuiteEvent where senderOfEvent = evCheckSuiteSender
 instance EventHasRepo CheckSuiteEvent where repoForEvent = evCheckSuiteRepository
--- instance NFData CheckSuiteEvent where rnf = genericRnf
+instance NFData CheckSuiteEvent where rnf = genericRnf
 
 -- | Represents the "action" field in the
 -- 'CommitCommentEvent' payload.

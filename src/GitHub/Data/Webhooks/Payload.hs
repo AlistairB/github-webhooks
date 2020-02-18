@@ -30,6 +30,7 @@ module GitHub.Data.Webhooks.Payload
     , HookProjectColumn(..)
     , HookIssueLabels(..)
     , HookCommit(..)
+    , HookCheckSuite(..)
     , HookRelease(..)
     , HookPullRequest(..)
     , PullRequestTarget(..)
@@ -460,7 +461,7 @@ instance NFData HookCheckSuiteConclusion where rnf = genericRnf
 instance FromJSON HookCheckSuiteConclusion where
   parseJSON = withText "Hook check suite status" $ \t ->
       case t of
-          "success"                -> pure HookCheckSuiteConclusionSuccess
+          "success"               -> pure HookCheckSuiteConclusionSuccess
           "failure"               -> pure HookCheckSuiteConclusionFailure
           "neutral"               -> pure HookCheckSuiteConclusionNeutral
           "cancelled"             -> pure HookCheckSuiteConclusionCancelled
@@ -469,9 +470,10 @@ instance FromJSON HookCheckSuiteConclusion where
           "stale"                 -> pure HookCheckSuiteConclusionStale
           _                       -> pure (HookCheckSuiteConclusionOther t)
 
+-- FIXME: Missing nested "app", there are examples, but no documentation.
 data HookCheckSuite = HookCheckSuite
     { whCheckSuiteId                :: !Int
-    , whCheckSuiteHeadBranch        :: !Text
+    , whCheckSuiteHeadBranch        :: !(Maybe Text) -- ^ The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty pull_requests array and a null value for head_branch.
     , whCheckSuiteHeadSha           :: !Text
     , whCheckSuiteStatus            :: !HookCheckSuiteStatus
     , whCheckSuiteConclusion        :: !(Maybe HookCheckSuiteConclusion)
