@@ -264,10 +264,10 @@ checkSuiteEventFixture = CheckSuiteEvent
           , whUserIsAdminOfSite = False
           }
     , evCheckSuiteInstallation =
-      Just
-        HookCheckSuiteInstallation
-          { whCheckSuiteInstallationId = 1234123
-          }
+        Just
+          HookCheckSuiteInstallation
+            { whCheckSuiteInstallationId = 1234123
+            }
     }
 
 commitCommentEventFixture :: CommitCommentEvent
