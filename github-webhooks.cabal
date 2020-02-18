@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 1a0d06526485495c6980a45d68f584ba73282c28be0394d5530961bd0e0f0de2
+-- hash: f327874fa559aa074273b9bb846d9e35c35fbcf4501828821eb8f4110f445be2
 
 name:           github-webhooks
 version:        0.11.0
@@ -32,6 +32,7 @@ extra-source-files:
     stack-ghc-8.0.yaml
     stack-nightly.yaml
     CHANGELOG.md
+    fixtures/check-suite-event.json
     fixtures/commit-comment-event.json
     fixtures/create-event.json
     fixtures/delete-event.json

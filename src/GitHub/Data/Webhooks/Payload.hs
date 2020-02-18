@@ -567,12 +567,34 @@ data HookPullRequest = HookPullRequest
 
 instance NFData HookPullRequest where rnf = genericRnf
 
+-- | Represents the "pull_requests" field in the checks events payload.
+data HookPullRequestSimple = HookPullRequestSimple
+    { whPullReqSimpleUrl              :: !URL
+    , whPullReqSimpleId               :: !Int
+    , whPullReqSimpleNumber           :: !Int
+    , whPullReqSimpleBase             :: !PullRequestTarget
+    , whPullReqSimpleHead             :: !PullRequestTarget
+    }
+    deriving (Eq, Show, Typeable, Data, Generic)
+
+instance NFData HookPullRequestSimple where rnf = genericRnf
+
 data PullRequestTarget = PullRequestTarget
     { whPullReqTargetSha :: !Text
     , whPullReqTargetUser :: !HookUser
     , whPullReqTargetRepo :: !HookRepository
     , whPullReqTargetLabel :: !Text -- ex "user:branch"
     , whPullReqTargetRef :: !Text -- ex "somebranch"
+    }
+    deriving (Eq, Show, Typeable, Data, Generic)
+
+instance NFData PullRequestTarget where rnf = genericRnf
+
+-- | Represents the "pull_requests" head/base field in the checks events payload.
+data PullRequestTargetSimple = PullRequestTargetSimple
+    { whPullReqTargetSimpleSha  :: !Text
+    , whPullReqTargetSimpleRef  :: !Text -- ex "somebranch"
+    , whPullReqTargetSimpleRepo :: !HookRepository
     }
     deriving (Eq, Show, Typeable, Data, Generic)
 
