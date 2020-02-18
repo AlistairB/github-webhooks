@@ -479,16 +479,54 @@ data HookCheckSuite = HookCheckSuite
     , whCheckSuiteStatus            :: !HookCheckSuiteStatus
     , whCheckSuiteConclusion        :: !(Maybe HookCheckSuiteConclusion)
     , whCheckSuiteUrl               :: !URL
-    , evCheckSuiteBeforeSha         :: !(Maybe Text)
-    , evCheckSuiteAfterSha          :: !Text
+    , whCheckSuiteBeforeSha         :: !(Maybe Text)
+    , whCheckSuiteAfterSha          :: !Text
     , whCheckSuitePullRequests      :: !(Vector HookPullRequest)
     }
     deriving (Eq, Show, Typeable, Data, Generic)
 
 instance NFData HookCheckSuite where rnf = genericRnf
 
--- FIXME: Missing nested metadata that provides commit description
--- FIXME: Missing property "parent" (no examples provided)
+data HookChecksPullRequest = HookChecksPullRequest
+    { whHookChecksPullRequestUrl              :: !URL
+    , whHookChecksPullRequestId               :: !Int
+    , whHookChecksPullRequestNumber           :: !Int
+    , whHookChecksPullRequestBase             :: !HookChecksPullRequestTarget
+    , whHookChecksPullRequestHead             :: !HookChecksPullRequestTarget
+    }
+    deriving (Eq, Show, Typeable, Data, Generic)
+
+instance NFData HookChecksPullRequest where rnf = genericRnf
+
+data  HookChecksPullRequestTarget = HookChecksPullRequestTarget
+    { whHookChecksPullRequestTargetSha  :: !Text
+    , whHookChecksPullRequestTargetRef  :: !Text -- ex "somebranch"
+    , whHookChecksPullRequestTargetRepo :: !HookChecksPullRequestRepository
+    }
+    deriving (Eq, Show, Typeable, Data, Generic)
+
+instance NFData HookChecksPullRequestTarget where rnf = genericRnf
+
+data HookChecksPullRequestRepository = HookChecksPullRequestRepository
+    { whHookChecksPullRequestRepositoryId                  :: !Int
+    , whHookChecksPullRequestRepositoryName                :: !Text
+    , whHookChecksPullRequestRepositoryUrl                 :: !URL
+    }
+    deriving (Eq, Show, Typeable, Data, Generic)
+
+instance NFData HookChecksPullRequestRepository where rnf = genericRnf
+
+data HookCheckSuiteCommit = HookCheckSuiteCommit
+    { whHookCheckSuiteCommitSha               :: !Text          -- ^ Sometimes called the commit 'id'.
+    , whHookCheckSuiteCommitAuthor            :: !HookSimpleUser
+    , whHookCheckSuiteCommitCommitter         :: !HookSimpleUser
+    }
+    deriving (Eq, Show, Typeable, Data, Generic)
+
+instance NFData HookCheckSuiteCommit where rnf = genericRnf
+
+--- FIXME: Missing nested metadata that provides commit description
+--- FIXME: Missing property "parent" (no examples provided)
 data HookCommit = HookCommit
     { whCommitSha               :: !Text          -- ^ Sometimes called the commit 'id'.
     , whCommitUrl               :: !URL
@@ -500,7 +538,6 @@ data HookCommit = HookCommit
     deriving (Eq, Show, Typeable, Data, Generic)
 
 instance NFData HookCommit where rnf = genericRnf
-
 
 -- FIXME: Missing property "assets" (no examples provided)
 data HookRelease = HookRelease
@@ -567,34 +604,12 @@ data HookPullRequest = HookPullRequest
 
 instance NFData HookPullRequest where rnf = genericRnf
 
--- | Represents the "pull_requests" field in the checks events payload.
-data HookPullRequestSimple = HookPullRequestSimple
-    { whPullReqSimpleUrl              :: !URL
-    , whPullReqSimpleId               :: !Int
-    , whPullReqSimpleNumber           :: !Int
-    , whPullReqSimpleBase             :: !PullRequestTarget
-    , whPullReqSimpleHead             :: !PullRequestTarget
-    }
-    deriving (Eq, Show, Typeable, Data, Generic)
-
-instance NFData HookPullRequestSimple where rnf = genericRnf
-
 data PullRequestTarget = PullRequestTarget
     { whPullReqTargetSha :: !Text
     , whPullReqTargetUser :: !HookUser
     , whPullReqTargetRepo :: !HookRepository
     , whPullReqTargetLabel :: !Text -- ex "user:branch"
     , whPullReqTargetRef :: !Text -- ex "somebranch"
-    }
-    deriving (Eq, Show, Typeable, Data, Generic)
-
-instance NFData PullRequestTarget where rnf = genericRnf
-
--- | Represents the "pull_requests" head/base field in the checks events payload.
-data PullRequestTargetSimple = PullRequestTargetSimple
-    { whPullReqTargetSimpleSha  :: !Text
-    , whPullReqTargetSimpleRef  :: !Text -- ex "somebranch"
-    , whPullReqTargetSimpleRepo :: !HookRepository
     }
     deriving (Eq, Show, Typeable, Data, Generic)
 
@@ -1009,6 +1024,31 @@ instance FromJSON HookCheckSuite where
       <*> o .: "after"
       <*> o .: "labels"
 
+instance FromJSON HookCheckSuiteCommit where
+  parseJSON = withObject "HookCheckSuiteCommit" $ \o -> HookCheckSuiteCommit
+      <$> o .: "id"
+      <*> o .: "author"
+      <*> o .: "committer"
+
+instance FromJSON HookChecksPullRequest where
+  parseJSON = withObject "HookChecksPullRequest" $ \o -> HookChecksPullRequest
+      <$> o .: "url"
+      <*> o .: "id"
+      <*> o .: "number"
+      <*> o .: "base"
+      <*> o .: "head"
+
+instance FromJSON HookChecksPullRequestTarget where
+    parseJSON = withObject "PullRequestTarget" $ \o -> HookChecksPullRequestTarget
+      <$> o .: "sha"
+      <*> o .: "ref"
+      <*> o .: "repo"
+
+instance FromJSON HookChecksPullRequestRepository where
+  parseJSON = withObject "HookChecksPullRequestRepository" $ \o -> HookChecksPullRequestRepository
+      <$> o .: "sha"
+      <*> o .: "ref"
+      <*> o .: "repo"
 
 instance FromJSON HookCommit where
   parseJSON = withObject "HookCommit" $ \o -> HookCommit
