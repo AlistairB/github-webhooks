@@ -412,6 +412,42 @@ data HookIssueLabels = HookIssueLabels
 
 instance NFData HookIssueLabels where rnf = genericRnf
 
+data HookCheckSuiteStatus
+    -- | Decodes from "requested"
+    = HookCheckSuiteStatusRequested
+    -- | Decodes from "in_progress"
+    | HookCheckSuiteStatusInProgress
+    -- | Decodes from "completed"
+    | HookCheckSuiteStatusCompleted
+    deriving (Eq, Ord, Show, Generic, Typeable, Data)
+
+data HookCheckSuiteConclusion
+    -- | Decodes from "success"
+    = HookCheckSuiteStatusSuccess
+    -- | Decodes from "failure"
+    | HookCheckSuiteStatusFailure
+    -- | Decodes from "neutral"
+    | HookCheckSuiteStatusNeutral
+    -- | Decodes from "cancelled"
+    | HookCheckSuiteStatusCancelled
+    -- | Decodes from "timed_out"
+    | HookCheckSuiteStatusTimedOut
+    -- | Decodes from "action_required"
+    | HookCheckSuiteStatusActionRequired
+    -- | Decodes from "stale"
+    | HookCheckSuiteStatusStale
+    deriving (Eq, Ord, Show, Generic, Typeable, Data)
+
+data HookCheckSuite = HookCheckSuite
+    { whCheckSuiteHeadBranch        :: !Text
+    , whCheckSuiteHeadSha           :: !Text
+    , whCheckSuiteStatus            :: !HookCheckSuiteStatus
+    , whCheckSuiteUrl               :: !URL
+    , whCheckSuitePullRequests      :: !(Vector HookPullRequest)
+    }
+    deriving (Eq, Show, Typeable, Data, Generic)
+
+instance NFData HookCheckSuite where rnf = genericRnf
 
 -- FIXME: Missing nested metadata that provides commit description
 -- FIXME: Missing property "parent" (no examples provided)
