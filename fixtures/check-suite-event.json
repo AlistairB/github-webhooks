@@ -76,7 +76,7 @@
     "created_at": "2020-02-18T00:54:04Z",
     "updated_at": "2020-02-18T00:54:04Z",
     "latest_check_runs_count": 0,
-    "check_runs_url": "https://api.github.com/repos/baxterthehacker/public-repo/check-suites/123451234/check-runs",
+    "check_runs_url": "https://api.github.com/repos/baxterthehacker/public-repo/check-suites/12341234111/check-runs",
     "head_commit": {
       "id": "45deaf5013c757e58e2665849c3fd3add3edfa59",
       "tree_id": "7eccf45e2908e97540ab6b4d6ce849f0a7c0cfca",

@@ -481,14 +481,18 @@ instance FromJSON HookCheckSuiteConclusion where
 data HookCheckSuite = HookCheckSuite
     { whCheckSuiteId                :: !Int
     , whCheckSuiteHeadBranch        :: !(Maybe Text) -- ^ The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty pull_requests array and a null value for head_branch.
-    , whCheckSuiteHeadSha           :: !Text
-    , whCheckSuiteStatus            :: !HookCheckSuiteStatus
-    , whCheckSuiteConclusion        :: !(Maybe HookCheckSuiteConclusion)
-    , whCheckSuiteUrl               :: !URL
-    , whCheckSuiteBeforeSha         :: !(Maybe Text)
-    , whCheckSuiteAfterSha          :: !Text
-    , whCheckSuitePullRequests      :: !(Vector HookChecksPullRequest)
-    , whCheckSuiteHeadCommit        :: !HookCheckSuiteCommit
+    , whCheckSuiteHeadSha              :: !Text
+    , whCheckSuiteStatus               :: !HookCheckSuiteStatus
+    , whCheckSuiteConclusion           :: !(Maybe HookCheckSuiteConclusion)
+    , whCheckSuiteUrl                  :: !URL
+    , whCheckSuiteBeforeSha            :: !(Maybe Text)
+    , whCheckSuiteAfterSha             :: !Text
+    , whCheckSuitePullRequests         :: !(Vector HookChecksPullRequest)
+    , whCheckSuiteCreatedAt            :: !UTCTime
+    , whCheckSuiteUpdatedAt            :: !UTCTime
+    , whCheckSuiteLatestCheckRunsCount :: !Int
+    , whCheckSuiteCheckRunsUrl         :: !URL
+    , whCheckSuiteHeadCommit           :: !HookCheckSuiteCommit
     }
     deriving (Eq, Show, Typeable, Data, Generic)
 
@@ -1031,6 +1035,10 @@ instance FromJSON HookCheckSuite where
       <*> o .:? "before"
       <*> o .: "after"
       <*> o .: "pull_requests"
+      <*> o .: "created_at"
+      <*> o .: "updated_at"
+      <*> o .: "latest_check_runs_count"
+      <*> o .: "check_runs_url"
       <*> o .: "head_commit"
 
 instance FromJSON HookCheckSuiteCommit where
