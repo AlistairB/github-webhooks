@@ -157,9 +157,7 @@ instance FromJSON CheckSuiteEventAction where
 data CheckSuiteEvent = CheckSuiteEvent
     { evCheckSuiteAction              :: !CheckSuiteEventAction
     , evCheckSuiteCheckSuite          :: !HookCheckSuite
-    , evCheckSuiteHeadSha             :: !(Maybe Text)
-    , evCheckSuiteBeforeSha           :: !(Maybe Text)
-    , evCheckSuiteHeadCommit          :: !(Maybe HookCheckSuiteCommit)
+    , evCheckSuiteHeadCommit          :: !HookCheckSuiteCommit
     , evCheckSuiteRepository          :: !HookRepository
     , evCheckSuiteOrganization        :: !(Maybe HookOrganization)
     , evCheckSuiteSender              :: !HookUser
@@ -1238,6 +1236,16 @@ instance NFData WatchEvent where rnf = genericRnf
 
 
 -- Aeson Instances
+
+instance FromJSON CheckSuiteEvent where
+    parseJSON = withObject "CheckSuiteEvent" $ \o -> CheckSuiteEvent
+        <$> o .: "action"
+        <*> o .: "check_suite"
+        <*> o .: "head_commit"
+        <*> o .: "repository"
+        <*> o .:? "organization"
+        <*> o .: "sender"
+        <*> o .:? "installation"
 
 instance FromJSON CommitCommentEvent where
     parseJSON = withObject "CommitCommentEvent" $ \o -> CommitCommentEvent
