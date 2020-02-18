@@ -160,7 +160,7 @@ data CheckSuiteEvent = CheckSuiteEvent
     , evCheckSuiteRepository          :: !HookRepository
     , evCheckSuiteOrganization        :: !(Maybe HookOrganization)
     , evCheckSuiteSender              :: !HookUser
-    , evCheckSuiteInstallation        :: !HookInstallation
+    , evCheckSuiteInstallation        :: !HookInstallationSimple
     }
     deriving (Eq, Show, Typeable, Data, Generic)
 

@@ -36,6 +36,7 @@ module GitHub.Data.Webhooks.Payload
     , PullRequestTarget(..)
     , HookPullRequestReview(..)
     , HookInstallation(..)
+    , HookInstallationSimple(..)
     , HookDeployment(..)
     , HookDeploymentStatus(..)
     , HookWikiPage(..)
@@ -603,6 +604,14 @@ data HookInstallation = HookInstallation
 
 instance NFData HookInstallation where rnf = genericRnf
 
+-- | Represents the "installation" field in the 'CheckSuiteEvent' payload.
+newtype HookInstallationSimple = HookInstallationSimple
+    { whInstallationSimpleId    :: Int
+    }
+    deriving (Eq, Show, Typeable, Data, Generic)
+
+instance NFData HookInstallationSimple where rnf = genericRnf
+
 -- | Represents the "deployment" field in the
 -- 'DeploymentEvent' and 'DeploymentStatusEvent' payload.
 data HookDeployment = HookDeployment
@@ -1071,6 +1080,10 @@ instance FromJSON HookInstallation where
       <*> o .: "repository_selection"
       <*> o .: "access_tokens_url"
       <*> o .: "repositories_url"
+
+instance FromJSON HookInstallationSimple where
+  parseJSON = withObject "HookInstallationSimple" $ \o -> HookInstallationSimple
+      <$> o .: "id"
 
 instance FromJSON HookDeployment where
   parseJSON = withObject "HookDeployment" $ \o -> HookDeployment
