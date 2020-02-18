@@ -127,6 +127,41 @@ class EventHasRepo eventKind where
     repoForEvent :: eventKind -> HookRepository
 
 -- | Represents the "action" field in the
+-- 'CheckSuiteEvent' payload.
+data CheckSuiteEventAction
+    -- | Decodes from "completed"
+    = CheckSuiteEventActionCompleted
+    -- | Decodes from "requested"
+    | CheckSuiteEventActionRequested
+    -- | Decodes from "rerequested"
+    | CheckSuiteEventActionRerequested
+    deriving (Eq, Ord, Show, Generic, Typeable, Data)
+
+-- | Triggered when a check suite is completed, requested, or rerequested.
+-- See <https://developer.github.com/v3/activity/events/types/#checksuiteevent>.
+data CheckSuiteEvent = CheckSuiteEvent
+    { evCheckSuiteAction              :: !CheckSuiteEventAction
+    , evCheckSuiteRef                 :: !Text
+    , evCheckSuiteHeadSha             :: !(Maybe Text)
+    , evCheckSuiteBeforeSha           :: !(Maybe Text)
+    , evCheckSuiteCreated             :: !Bool
+    , evCheckSuiteDeleted             :: !Bool
+    , evCheckSuiteForced              :: !Bool
+    , evCheckSuiteBaseRef             :: !(Maybe Text)
+    , evCheckSuiteCompareUrl          :: !URL
+    , evCheckSuiteCommits             :: !(Maybe (Vector HookCommit))
+    , evCheckSuiteHeadCommit          :: !(Maybe HookCommit)
+    , evCheckSuiteRepository          :: !HookRepository
+    , evCheckSuiteOrganization        :: !(Maybe HookOrganization)
+    , evCheckSuiteSender              :: !HookUser
+    }
+    deriving (Eq, Show, Typeable, Data, Generic)
+
+instance EventHasSender CheckSuiteEvent where senderOfEvent = evCheckSuiteSender
+instance EventHasRepo CheckSuiteEvent where repoForEvent = evCheckSuiteRepository
+-- instance NFData CheckSuiteEvent where rnf = genericRnf
+
+-- | Represents the "action" field in the
 -- 'CommitCommentEvent' payload.
 data CommitCommentEventAction
     -- | Decodes from "created"
