@@ -415,34 +415,69 @@ instance NFData HookIssueLabels where rnf = genericRnf
 data HookCheckSuiteStatus
     -- | Decodes from "requested"
     = HookCheckSuiteStatusRequested
+    -- | Decodes from "queued".
+    | HookCheckSuiteStatusQueued
     -- | Decodes from "in_progress"
     | HookCheckSuiteStatusInProgress
     -- | Decodes from "completed"
     | HookCheckSuiteStatusCompleted
+    -- | The result of decoding an unknown check suite status type
+    | HookCheckSuiteStatusOther !Text
     deriving (Eq, Ord, Show, Generic, Typeable, Data)
+
+instance NFData HookCheckSuiteStatus where rnf = genericRnf
+
+instance FromJSON HookCheckSuiteStatus where
+  parseJSON = withText "Hook check suite status" $ \t ->
+      case t of
+          "requested"          -> pure HookCheckSuiteStatusRequested
+          "queued"             -> pure HookCheckSuiteStatusQueued
+          "in_progress"        -> pure HookCheckSuiteStatusInProgress
+          "completed"          -> pure HookCheckSuiteStatusCompleted
+          _                    -> pure (HookCheckSuiteStatusOther t)
 
 data HookCheckSuiteConclusion
     -- | Decodes from "success"
-    = HookCheckSuiteStatusSuccess
+    = HookCheckSuiteConclusionSuccess
     -- | Decodes from "failure"
-    | HookCheckSuiteStatusFailure
+    | HookCheckSuiteConclusionFailure
     -- | Decodes from "neutral"
-    | HookCheckSuiteStatusNeutral
+    | HookCheckSuiteConclusionNeutral
     -- | Decodes from "cancelled"
-    | HookCheckSuiteStatusCancelled
+    | HookCheckSuiteConclusionCancelled
     -- | Decodes from "timed_out"
-    | HookCheckSuiteStatusTimedOut
+    | HookCheckSuiteConclusionTimedOut
     -- | Decodes from "action_required"
-    | HookCheckSuiteStatusActionRequired
+    | HookCheckSuiteConclusionActionRequired
     -- | Decodes from "stale"
-    | HookCheckSuiteStatusStale
+    | HookCheckSuiteConclusionStale
+    -- | The result of decoding an unknown check suite conclusion type
+    | HookCheckSuiteConclusionOther !Text
     deriving (Eq, Ord, Show, Generic, Typeable, Data)
 
+instance NFData HookCheckSuiteConclusion where rnf = genericRnf
+
+instance FromJSON HookCheckSuiteConclusion where
+  parseJSON = withText "Hook check suite status" $ \t ->
+      case t of
+          "success"                -> pure HookCheckSuiteConclusionSuccess
+          "failure"               -> pure HookCheckSuiteConclusionFailure
+          "neutral"               -> pure HookCheckSuiteConclusionNeutral
+          "cancelled"             -> pure HookCheckSuiteConclusionCancelled
+          "timed_out"             -> pure HookCheckSuiteConclusionTimedOut
+          "action_required"       -> pure HookCheckSuiteConclusionActionRequired
+          "stale"                 -> pure HookCheckSuiteConclusionStale
+          _                       -> pure (HookCheckSuiteConclusionOther t)
+
 data HookCheckSuite = HookCheckSuite
-    { whCheckSuiteHeadBranch        :: !Text
+    { whCheckSuiteId                :: !Int
+    , whCheckSuiteHeadBranch        :: !Text
     , whCheckSuiteHeadSha           :: !Text
     , whCheckSuiteStatus            :: !HookCheckSuiteStatus
+    , whCheckSuiteConclusion        :: !(Maybe HookCheckSuiteConclusion)
     , whCheckSuiteUrl               :: !URL
+    , evCheckSuiteBeforeSha         :: !(Maybe Text)
+    , evCheckSuiteAfterSha          :: !Text
     , whCheckSuitePullRequests      :: !(Vector HookPullRequest)
     }
     deriving (Eq, Show, Typeable, Data, Generic)
@@ -928,6 +963,19 @@ instance FromJSON HookIssueLabels where
       <*> o .: "name"
       <*> o .: "color"
       <*> o .:? "default" .!= False
+
+instance FromJSON HookCheckSuite where
+  parseJSON = withObject "HookCheckSuite" $ \o -> HookCheckSuite
+      <$> o .: "id"
+      <*> o .: "head_branch"
+      <*> o .: "head_sha"
+      <*> o .: "status"
+      <*> o .:? "conclusion"
+      <*> o .: "url"
+      <*> o .:? "before"
+      <*> o .: "after"
+      <*> o .: "labels"
+
 
 instance FromJSON HookCommit where
   parseJSON = withObject "HookCommit" $ \o -> HookCommit

@@ -135,13 +135,23 @@ data CheckSuiteEventAction
     | CheckSuiteEventActionRequested
     -- | Decodes from "rerequested"
     | CheckSuiteEventActionRerequested
+    -- | The result of decoding an unknown check suite event action type
+    | CheckSuiteEventActionOther !Text
     deriving (Eq, Ord, Show, Generic, Typeable, Data)
+
+instance FromJSON CheckSuiteEventAction where
+  parseJSON = withText "Check suite event action" $ \t ->
+      case t of
+          "completed"          -> pure CheckSuiteEventActionCompleted
+          "requested"          -> pure CheckSuiteEventActionRequested
+          "rerequested"        -> pure CheckSuiteEventActionRerequested
+          _                    -> pure (CheckSuiteEventActionOther t)
 
 -- | Triggered when a check suite is completed, requested, or rerequested.
 -- See <https://developer.github.com/v3/activity/events/types/#checksuiteevent>.
 data CheckSuiteEvent = CheckSuiteEvent
     { evCheckSuiteAction              :: !CheckSuiteEventAction
-    , evCheckSuiteRef                 :: !Text
+    , evCheckSuiteCheckSuite          :: !HookCheckSuite
     , evCheckSuiteHeadSha             :: !(Maybe Text)
     , evCheckSuiteBeforeSha           :: !(Maybe Text)
     , evCheckSuiteCreated             :: !Bool
