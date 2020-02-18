@@ -157,7 +157,6 @@ instance FromJSON CheckSuiteEventAction where
 data CheckSuiteEvent = CheckSuiteEvent
     { evCheckSuiteAction              :: !CheckSuiteEventAction
     , evCheckSuiteCheckSuite          :: !HookCheckSuite
-    , evCheckSuiteHeadCommit          :: !HookCheckSuiteCommit
     , evCheckSuiteRepository          :: !HookRepository
     , evCheckSuiteOrganization        :: !(Maybe HookOrganization)
     , evCheckSuiteSender              :: !HookUser
@@ -1241,7 +1240,6 @@ instance FromJSON CheckSuiteEvent where
     parseJSON = withObject "CheckSuiteEvent" $ \o -> CheckSuiteEvent
         <$> o .: "action"
         <*> o .: "check_suite"
-        <*> o .: "head_commit"
         <*> o .: "repository"
         <*> o .:? "organization"
         <*> o .: "sender"

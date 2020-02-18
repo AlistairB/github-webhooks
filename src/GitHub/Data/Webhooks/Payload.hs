@@ -487,7 +487,8 @@ data HookCheckSuite = HookCheckSuite
     , whCheckSuiteUrl               :: !URL
     , whCheckSuiteBeforeSha         :: !(Maybe Text)
     , whCheckSuiteAfterSha          :: !Text
-    , whCheckSuitePullRequests      :: !(Vector HookPullRequest)
+    , whCheckSuitePullRequests      :: !(Vector HookChecksPullRequest)
+    , whCheckSuiteHeadCommit        :: !HookCheckSuiteCommit
     }
     deriving (Eq, Show, Typeable, Data, Generic)
 
@@ -495,9 +496,9 @@ instance NFData HookCheckSuite where rnf = genericRnf
 
 -- | Represents the "head_commit" field in the 'CheckSuiteEvent' payload.
 data HookCheckSuiteCommit = HookCheckSuiteCommit
-    { whHookCheckSuiteCommitSha               :: !Text          -- ^ Sometimes called the commit 'id'.
-    , whHookCheckSuiteCommitAuthor            :: !HookSimpleUser
-    , whHookCheckSuiteCommitCommitter         :: !HookSimpleUser
+    { whCheckSuiteCommitSha               :: !Text          -- ^ Sometimes called the commit 'id'.
+    , whCheckSuiteCommitAuthor            :: !HookSimpleUser
+    , whCheckSuiteCommitCommitter         :: !HookSimpleUser
     }
     deriving (Eq, Show, Typeable, Data, Generic)
 
@@ -505,36 +506,36 @@ instance NFData HookCheckSuiteCommit where rnf = genericRnf
 
 -- | Represents the "installation" field in the 'CheckSuiteEvent' payload.
 newtype HookCheckSuiteInstallation = HookCheckSuiteInstallation
-    { whInstallationSimpleId    :: Int
+    { whCheckSuiteInstallationId    :: Int
     }
     deriving (Eq, Show, Typeable, Data, Generic)
 
 instance NFData HookCheckSuiteInstallation where rnf = genericRnf
 
 data HookChecksPullRequest = HookChecksPullRequest
-    { whHookChecksPullRequestUrl              :: !URL
-    , whHookChecksPullRequestId               :: !Int
-    , whHookChecksPullRequestNumber           :: !Int
-    , whHookChecksPullRequestBase             :: !HookChecksPullRequestTarget
-    , whHookChecksPullRequestHead             :: !HookChecksPullRequestTarget
+    { whChecksPullRequestUrl              :: !URL
+    , whChecksPullRequestId               :: !Int
+    , whChecksPullRequestNumber           :: !Int
+    , whChecksPullRequestHead             :: !HookChecksPullRequestTarget
+    , whChecksPullRequestBase             :: !HookChecksPullRequestTarget
     }
     deriving (Eq, Show, Typeable, Data, Generic)
 
 instance NFData HookChecksPullRequest where rnf = genericRnf
 
 data HookChecksPullRequestRepository = HookChecksPullRequestRepository
-    { whHookChecksPullRequestRepositoryId                  :: !Int
-    , whHookChecksPullRequestRepositoryName                :: !Text
-    , whHookChecksPullRequestRepositoryUrl                 :: !URL
+    { whChecksPullRequestRepositoryId                  :: !Int
+    , whChecksPullRequestRepositoryUrl                 :: !URL
+    , whChecksPullRequestRepositoryName                :: !Text
     }
     deriving (Eq, Show, Typeable, Data, Generic)
 
 instance NFData HookChecksPullRequestRepository where rnf = genericRnf
 
 data  HookChecksPullRequestTarget = HookChecksPullRequestTarget
-    { whHookChecksPullRequestTargetSha  :: !Text
-    , whHookChecksPullRequestTargetRef  :: !Text -- ex "somebranch"
-    , whHookChecksPullRequestTargetRepo :: !HookChecksPullRequestRepository
+    { whChecksPullRequestTargetSha  :: !Text
+    , whChecksPullRequestTargetRef  :: !Text -- ex "somebranch"
+    , whChecksPullRequestTargetRepo :: !HookChecksPullRequestRepository
     }
     deriving (Eq, Show, Typeable, Data, Generic)
 
@@ -1022,14 +1023,15 @@ instance FromJSON HookIssueLabels where
 instance FromJSON HookCheckSuite where
   parseJSON = withObject "HookCheckSuite" $ \o -> HookCheckSuite
       <$> o .: "id"
-      <*> o .: "head_branch"
+      <*> o .:? "head_branch"
       <*> o .: "head_sha"
       <*> o .: "status"
       <*> o .:? "conclusion"
       <*> o .: "url"
       <*> o .:? "before"
       <*> o .: "after"
-      <*> o .: "labels"
+      <*> o .: "pull_requests"
+      <*> o .: "head_commit"
 
 instance FromJSON HookCheckSuiteCommit where
   parseJSON = withObject "HookCheckSuiteCommit" $ \o -> HookCheckSuiteCommit
@@ -1046,8 +1048,8 @@ instance FromJSON HookChecksPullRequest where
       <$> o .: "url"
       <*> o .: "id"
       <*> o .: "number"
-      <*> o .: "base"
       <*> o .: "head"
+      <*> o .: "base"
 
 instance FromJSON HookChecksPullRequestTarget where
     parseJSON = withObject "PullRequestTarget" $ \o -> HookChecksPullRequestTarget
@@ -1057,9 +1059,9 @@ instance FromJSON HookChecksPullRequestTarget where
 
 instance FromJSON HookChecksPullRequestRepository where
   parseJSON = withObject "HookChecksPullRequestRepository" $ \o -> HookChecksPullRequestRepository
-      <$> o .: "sha"
-      <*> o .: "ref"
-      <*> o .: "repo"
+      <$> o .: "id"
+      <*> o .: "url"
+      <*> o .: "name"
 
 instance FromJSON HookCommit where
   parseJSON = withObject "HookCommit" $ \o -> HookCommit

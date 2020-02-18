@@ -83,38 +83,62 @@ checkSuiteEventFixture = CheckSuiteEvent
     { evCheckSuiteAction = CheckSuiteEventActionCompleted
     , evCheckSuiteCheckSuite =
         HookCheckSuite
-          { whCheckSuiteId = 123412341
+          { whCheckSuiteId = 12341234111
           , whCheckSuiteHeadBranch = Just "test-pr"
           , whCheckSuiteHeadSha = "45deaf5013c757e58e2665849c3fd3add3edfa59"
-          , whCommitCommentUser =
-              HookUser
-                { whUserLogin = "baxterthehacker"
-                , whUserId = 6752317
-                , whUserAvatarUrl = URL "https://avatars.githubusercontent.com/u/6752317?v=3"
-                , whUserGravatarId = URL ""
-                , whUserUrl = URL "https://api.github.com/users/baxterthehacker"
-                , whUserHtmlUrl = URL "https://github.com/baxterthehacker"
-                , whUserFollowersUrl = URL "https://api.github.com/users/baxterthehacker/followers"
-                , whUserFollowingUrl = URL "https://api.github.com/users/baxterthehacker/following{/other_user}"
-                , whUserGistsUrl = URL "https://api.github.com/users/baxterthehacker/gists{/gist_id}"
-                , whUserStarredUrl = URL "https://api.github.com/users/baxterthehacker/starred{/owner}{/repo}"
-                , whUserSubscriptionsUrl = URL "https://api.github.com/users/baxterthehacker/subscriptions"
-                , whUserOrganizationsUrl = URL "https://api.github.com/users/baxterthehacker/orgs"
-                , whUserReposUrl = URL "https://api.github.com/users/baxterthehacker/repos"
-                , whUserEventsUrl = URL "https://api.github.com/users/baxterthehacker/events{/privacy}"
-                , whUserReceivedEventsUrl = URL "https://api.github.com/users/baxterthehacker/received_events"
-                , whUserType = OwnerUser
-                , whUserIsAdminOfSite = False
+          , whCheckSuiteStatus = HookCheckSuiteStatusCompleted
+          , whCheckSuiteConclusion = Just HookCheckSuiteConclusionActionRequired
+          , whCheckSuiteUrl = URL "https://api.github.com/repos/baxterthehacker/public-repo/check-suites/123451234"
+          , whCheckSuiteBeforeSha = Just "15c99c3e0b9d840d8465be47813cf39686815f2e"
+          , whCheckSuiteAfterSha = "45deaf5013c757e58e2665849c3fd3add3edfa59"
+          , whCheckSuitePullRequests =
+              V.fromList [
+                HookChecksPullRequest
+                  { whChecksPullRequestUrl = URL "https://api.github.com/repos/baxterthehacker/public-repo/pulls/1"
+                  , whChecksPullRequestId = 12345123222
+                  , whChecksPullRequestNumber = 1
+                  , whChecksPullRequestHead =
+                      HookChecksPullRequestTarget
+                        { whChecksPullRequestTargetSha = "a68c473cf629b651f6e615c7d0eea95811d2db3d"
+                        , whChecksPullRequestTargetRef = "test-pr"
+                        , whChecksPullRequestTargetRepo =
+                            HookChecksPullRequestRepository
+                              { whChecksPullRequestRepositoryId = 12345123333
+                              , whChecksPullRequestRepositoryUrl = URL "https://api.github.com/repos/baxterthehacker/public-repo"
+                              , whChecksPullRequestRepositoryName = "public-repo"
+                              }
+                        }
+                  , whChecksPullRequestBase =
+                      HookChecksPullRequestTarget
+                        { whChecksPullRequestTargetSha = "45deaf5013c757e58e2665849c3fd3add3edfa59"
+                        , whChecksPullRequestTargetRef = "master"
+                        , whChecksPullRequestTargetRepo =
+                            HookChecksPullRequestRepository
+                              { whChecksPullRequestRepositoryId = 123451234444
+                              , whChecksPullRequestRepositoryUrl = URL "https://api.github.com/repos/baxterthehacker/public-repo"
+                              , whChecksPullRequestRepositoryName = "public-repo"
+                              }
+                        }
+                  }
+              ]
+          , whCheckSuiteHeadCommit =
+              HookCheckSuiteCommit
+                { whCheckSuiteCommitSha = "45deaf5013c757e58e2665849c3fd3add3edfa59"
+                , whCheckSuiteCommitAuthor =
+                    HookSimpleUser
+                      { whSimplUserName = "baxterthehacker"
+                      , whSimplUserEmail = "baxterthehacker@users.noreply.github.com"
+                      , whSimplUserLogin = Nothing
+                      }
+                , whCheckSuiteCommitCommitter =
+                    HookSimpleUser
+                      { whSimplUserName = "baxterthehacker"
+                      , whSimplUserEmail = "baxterthehacker@users.noreply.github.com"
+                      , whSimplUserLogin = Nothing
+                      }
                 }
-          , whCommitCommentPos = Nothing
-          , whCommitCommentLine = Nothing
-          , whCommitCommentPath = Nothing
-          , whCommitCommentCommitSha = "9049f1265b7d61be4a8904a9a27120d2064dab3b"
-          , whCommitCommentCreatedAt = read "2015-05-05 23:40:29"
-          , whCommitCommentUpdatedAt = read "2015-05-05 23:40:29"
-          , whCommitCommentBody = "This is a really good change! :+1:"
           }
-    , evCommitCommentRepo =
+    , evCheckSuiteRepository =
         HookRepository
           { whRepoId = 35129377
           , whRepoName = "public-repo"
@@ -136,7 +160,7 @@ checkSuiteEventFixture = CheckSuiteEvent
                 , whUserReposUrl = URL "https://api.github.com/users/baxterthehacker/repos"
                 , whUserEventsUrl = URL "https://api.github.com/users/baxterthehacker/events{/privacy}"
                 , whUserReceivedEventsUrl = URL "https://api.github.com/users/baxterthehacker/received_events"
-                , whUserType = OwnerUser
+                , whUserType = OwnerOrganization
                 , whUserIsAdminOfSite = False
                 }
           , whRepoIsPrivate = False
@@ -200,7 +224,22 @@ checkSuiteEventFixture = CheckSuiteEvent
           , whRepoOpenIssuesCount = 2
           , whRepoDefaultBranchName = "master"
           }
-    , evCommitCommentSender =
+    , evCheckSuiteOrganization =
+        Just
+          HookOrganization
+            { whOrgLogin = "baxterandthehackers"
+            , whOrgId = 4312013
+            , whOrgUrl = URL "https://api.github.com/orgs/baxterandthehackers"
+            , whOrgReposUrl = URL "https://api.github.com/orgs/baxterandthehackers/repos"
+            , whOrgEventsUrl = URL "https://api.github.com/orgs/baxterandthehackers/events"
+            , whOrgHooksUrl = Just (URL "https://api.github.com/orgs/baxterandthehackers/hooks")
+            , whOrgIssuesUrl = Just (URL "https://api.github.com/orgs/baxterandthehackers/issues")
+            , whOrgMembersUrl = URL "https://api.github.com/orgs/baxterandthehackers/members{/member}"
+            , whOrgPublicMembersUrl = URL "https://api.github.com/orgs/baxterandthehackers/public_members{/member}"
+            , whOrgAvatarUrl = URL "https://avatars.githubusercontent.com/u/4312013?v=3"
+            , whOrgDescription = T.empty
+            }
+    , evCheckSuiteSender =
         HookUser
           { whUserLogin = "baxterthehacker"
           , whUserId = 6752317
@@ -219,6 +258,11 @@ checkSuiteEventFixture = CheckSuiteEvent
           , whUserReceivedEventsUrl = URL "https://api.github.com/users/baxterthehacker/received_events"
           , whUserType = OwnerUser
           , whUserIsAdminOfSite = False
+          }
+    , evCheckSuiteInstallation =
+      Just
+        HookCheckSuiteInstallation
+          { whCheckSuiteInstallationId = 1234123
           }
     }
 
