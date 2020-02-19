@@ -574,7 +574,7 @@ data HookCheckRun = HookCheckRun
     , whCheckRunExternalId           :: !Text
     , whCheckRunUrl                  :: !URL
     , whCheckRunHtmlUrl              :: !URL
-    , whCheckDetailsUrl              :: !URL
+    , whCheckRunDetailsUrl           :: !URL
     , whCheckRunStatus               :: !HookCheckRunStatus
     , whCheckRunConclusion           :: !(Maybe HookCheckRunConclusion)
     , whCheckRunStartedAt            :: !UTCTime

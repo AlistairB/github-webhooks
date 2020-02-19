@@ -14,6 +14,9 @@ module GitHub.Data.Webhooks.Events
     , CheckSuiteEventAction(..)
     , CheckSuiteEvent(..)
       --
+    , CheckRunEventAction(..)
+    , CheckRunEvent(..)
+      --
     , CommitCommentEvent(..)
     , CommitCommentEventAction(..)
       --
