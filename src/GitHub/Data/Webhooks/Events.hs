@@ -1288,6 +1288,16 @@ instance FromJSON CheckSuiteEvent where
         <*> o .: "sender"
         <*> o .:? "installation"
 
+instance FromJSON CheckRunEvent where
+    parseJSON = withObject "CheckRunEvent" $ \o -> CheckRunEvent
+        <$> o .: "action"
+        <*> o .: "check_run"
+        <*> o .:? "requested_action"
+        <*> o .: "repository"
+        <*> o .:? "organization"
+        <*> o .: "sender"
+        <*> o .:? "installation"
+
 instance FromJSON CommitCommentEvent where
     parseJSON = withObject "CommitCommentEvent" $ \o -> CommitCommentEvent
         <$> o .: "action"

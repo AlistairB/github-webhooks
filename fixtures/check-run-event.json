@@ -10,7 +10,7 @@
     "status": "completed",
     "conclusion": "stale",
     "started_at": "2020-02-19T02:44:54Z",
-    "completed_at": "2020-02-20T02:44:54Z",
+    "completed_at": null,
     "output": {
       "title": null,
       "summary": null,

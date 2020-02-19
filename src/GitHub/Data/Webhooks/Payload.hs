@@ -1135,15 +1135,44 @@ instance FromJSON HookCheckSuite where
       <*> o .: "pull_requests"
       <*> o .: "created_at"
       <*> o .: "updated_at"
-      <*> o .: "latest_check_runs_count"
-      <*> o .: "check_runs_url"
-      <*> o .: "head_commit"
+      <*> o .:? "latest_check_runs_count"
+      <*> o .:? "check_runs_url"
+      <*> o .:? "head_commit"
 
 instance FromJSON HookCheckSuiteCommit where
   parseJSON = withObject "HookCheckSuiteCommit" $ \o -> HookCheckSuiteCommit
       <$> o .: "id"
       <*> o .: "author"
       <*> o .: "committer"
+
+instance FromJSON HookCheckRun where
+  parseJSON = withObject "HookCheckRun" $ \o -> HookCheckRun
+      <$> o .: "id"
+      <*> o .: "head_sha"
+      <*> o .: "external_id"
+      <*> o .: "url"
+      <*> o .: "html_url"
+      <*> o .: "details_url"
+      <*> o .: "status"
+      <*> o .:? "conclusion"
+      <*> o .: "started_at"
+      <*> o .:? "completed_at"
+      <*> o .: "output"
+      <*> o .: "name"
+      <*> o .: "check_suite"
+      <*> o .: "pull_requests"
+
+instance FromJSON HookCheckRunOutput where
+  parseJSON = withObject "HookCheckRunOutput" $ \o -> HookCheckRunOutput
+      <$> o .: "title"
+      <*> o .: "summary"
+      <*> o .: "text"
+      <*> o .: "annotations_count"
+      <*> o .: "annotations_url"
+
+instance FromJSON HookCheckRunRequestedAction where
+  parseJSON = withObject "HookCheckRunRequestedAction" $ \o -> HookCheckRunRequestedAction
+      <$> o .: "identifier"
 
 instance FromJSON HookChecksInstallation where
   parseJSON = withObject "HookChecksInstallation" $ \o -> HookChecksInstallation
