@@ -479,8 +479,8 @@ instance FromJSON HookCheckSuiteConclusion where
 
 -- FIXME: Missing nested "app", there are examples, but no documentation.
 data HookCheckSuite = HookCheckSuite
-    { whCheckSuiteId                :: !Int
-    , whCheckSuiteHeadBranch        :: !(Maybe Text) -- ^ The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty pull_requests array and a null value for head_branch.
+    { whCheckSuiteId                   :: !Int
+    , whCheckSuiteHeadBranch           :: !(Maybe Text) -- ^ The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty pull_requests array and a null value for head_branch.
     , whCheckSuiteHeadSha              :: !Text
     , whCheckSuiteStatus               :: !HookCheckSuiteStatus
     , whCheckSuiteConclusion           :: !(Maybe HookCheckSuiteConclusion)
@@ -507,6 +507,82 @@ data HookCheckSuiteCommit = HookCheckSuiteCommit
     deriving (Eq, Show, Typeable, Data, Generic)
 
 instance NFData HookCheckSuiteCommit where rnf = genericRnf
+
+data HookCheckRunStatus
+    -- | Decodes from "queued"
+    = HookCheckRunStatusQueued
+    -- | Decodes from "in_progress"
+    | HookCheckRunStatusInProgress
+    -- | Decodes from "completed"
+    | HookCheckRunStatusCompleted
+    -- | The result of decoding an unknown check run status type
+    | HookCheckRunStatusOther !Text
+    deriving (Eq, Ord, Show, Generic, Typeable, Data)
+
+instance NFData HookCheckRunStatus where rnf = genericRnf
+
+instance FromJSON HookCheckRunStatus where
+  parseJSON = withText "Hook check suite status" $ \t ->
+      case t of
+          "queued"             -> pure HookCheckRunStatusQueued
+          "in_progress"        -> pure HookCheckRunStatusInProgress
+          "completed"          -> pure HookCheckRunStatusCompleted
+          _                    -> pure (HookCheckRunStatusOther t)
+
+data HookCheckRunConclusion
+    -- | Decodes from "success"
+    = HookCheckRunConclusionSuccess
+    -- | Decodes from "failure"
+    | HookCheckRunConclusionFailure
+    -- | Decodes from "neutral"
+    | HookCheckRunConclusionNeutral
+    -- | Decodes from "cancelled"
+    | HookCheckRunConclusionCancelled
+    -- | Decodes from "timed_out"
+    | HookCheckRunConclusionTimedOut
+    -- | Decodes from "action_required"
+    | HookCheckRunConclusionActionRequired
+    -- | Decodes from "stale"
+    | HookCheckRunConclusionStale
+    -- | The result of decoding an unknown check run conclusion type
+    | HookCheckRunConclusionOther !Text
+    deriving (Eq, Ord, Show, Generic, Typeable, Data)
+
+instance NFData HookCheckRunConclusion where rnf = genericRnf
+
+instance FromJSON HookCheckRunConclusion where
+  parseJSON = withText "Hook check suite status" $ \t ->
+      case t of
+          "success"               -> pure HookCheckRunConclusionSuccess
+          "failure"               -> pure HookCheckRunConclusionFailure
+          "neutral"               -> pure HookCheckRunConclusionNeutral
+          "cancelled"             -> pure HookCheckRunConclusionCancelled
+          "timed_out"             -> pure HookCheckRunConclusionTimedOut
+          "action_required"       -> pure HookCheckRunConclusionActionRequired
+          "stale"                 -> pure HookCheckRunConclusionStale
+          _                       -> pure (HookCheckRunConclusionOther t)
+
+-- FIXME: Missing nested "app", there are examples, but no documentation.
+data HookCheckRun = HookCheckRun
+    { whCheckRunId                   :: !Int
+    , whCheckRunHeadSha              :: !Text
+    , whCheckRunExternalId           :: !Text
+    , whCheckRunUrl                  :: !URL
+    , whCheckRunHtmlUrl              :: !URL
+    , whCheckDetailsUrl              :: !URL
+    , whCheckRunStatus               :: !HookCheckRunStatus
+    , whCheckRunConclusion           :: !(Maybe HookCheckRunConclusion)
+    , whCheckRunStartedAt            :: !UTCTime
+    , whCheckRunCompletedAt          :: !(Maybe UTCTime)
+    -- , whCheckRunOutput               :: !HookCheckRunOutput
+    , whCheckRunName                 :: !Text
+    , weCheckRunCheckSuite           :: !HookCheckSuite
+    -- , whCheckRunRequestedActions      :: !(Vector HookCheckRunRequestedAction)
+    , whCheckRunPullRequests         :: !(Vector HookChecksPullRequest)
+    }
+    deriving (Eq, Show, Typeable, Data, Generic)
+
+instance NFData HookCheckRun where rnf = genericRnf
 
 -- | Represents the "installation" field in the 'CheckSuiteEvent' payload.
 newtype HookChecksInstallation = HookChecksInstallation
