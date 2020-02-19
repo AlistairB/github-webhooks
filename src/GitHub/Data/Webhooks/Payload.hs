@@ -425,6 +425,8 @@ data HookIssueLabels = HookIssueLabels
 
 instance NFData HookIssueLabels where rnf = genericRnf
 
+-- | Represents the "status" field in the
+-- 'HookCheckSuite' payload.
 data HookCheckSuiteStatus
     -- | Decodes from "requested"
     = HookCheckSuiteStatusRequested
@@ -449,6 +451,8 @@ instance FromJSON HookCheckSuiteStatus where
           "completed"          -> pure HookCheckSuiteStatusCompleted
           _                    -> pure (HookCheckSuiteStatusOther t)
 
+-- | Represents the "conclusion" field in the
+-- 'HookCheckSuite' payload.
 data HookCheckSuiteConclusion
     -- | Decodes from "success"
     = HookCheckSuiteConclusionSuccess
@@ -483,6 +487,8 @@ instance FromJSON HookCheckSuiteConclusion where
           _                       -> pure (HookCheckSuiteConclusionOther t)
 
 -- FIXME: Missing nested "app", there are examples, but no documentation.
+-- | Represents the "check_suite" field in the
+-- 'CheckSuiteEvent' payload.
 data HookCheckSuite = HookCheckSuite
     { whCheckSuiteId                   :: !Int
     , whCheckSuiteHeadBranch           :: !(Maybe Text) -- ^ The Checks API only looks for pushes in the repository where the check suite or check run were created. Pushes to a branch in a forked repository are not detected and return an empty pull_requests array and a null value for head_branch.
@@ -503,7 +509,8 @@ data HookCheckSuite = HookCheckSuite
 
 instance NFData HookCheckSuite where rnf = genericRnf
 
--- | Represents the "head_commit" field in the 'CheckSuiteEvent' payload.
+-- | Represents the "head_commit" field in the
+--  'CheckSuiteEvent' payload.
 data HookCheckSuiteCommit = HookCheckSuiteCommit
     { whCheckSuiteCommitSha               :: !Text          -- ^ Sometimes called the commit 'id'.
     , whCheckSuiteCommitAuthor            :: !HookSimpleUser
@@ -513,6 +520,8 @@ data HookCheckSuiteCommit = HookCheckSuiteCommit
 
 instance NFData HookCheckSuiteCommit where rnf = genericRnf
 
+-- | Represents the "status" field in the
+--  'HookCheckRun' payload.
 data HookCheckRunStatus
     -- | Decodes from "queued"
     = HookCheckRunStatusQueued
@@ -534,6 +543,8 @@ instance FromJSON HookCheckRunStatus where
           "completed"          -> pure HookCheckRunStatusCompleted
           _                    -> pure (HookCheckRunStatusOther t)
 
+-- | Represents the "conclusion" field in the
+--  'HookCheckRun' payload.
 data HookCheckRunConclusion
     -- | Decodes from "success"
     = HookCheckRunConclusionSuccess
@@ -568,6 +579,8 @@ instance FromJSON HookCheckRunConclusion where
           _                       -> pure (HookCheckRunConclusionOther t)
 
 -- FIXME: Missing nested "app", there are examples, but no documentation.
+-- | Represents the "check_run" field in the
+--  'CheckRunEvent' payload.
 data HookCheckRun = HookCheckRun
     { whCheckRunId                   :: !Int
     , whCheckRunHeadSha              :: !Text
@@ -588,6 +601,8 @@ data HookCheckRun = HookCheckRun
 
 instance NFData HookCheckRun where rnf = genericRnf
 
+-- | Represents the "output" field in the
+--  'HookCheckRun' payload.
 data HookCheckRunOutput = HookCheckRunOutput
     { whCheckRunOutputTitle            :: !(Maybe Text)
     , whCheckRunOutputSummary          :: !(Maybe Text)
@@ -599,6 +614,8 @@ data HookCheckRunOutput = HookCheckRunOutput
 
 instance NFData HookCheckRunOutput where rnf = genericRnf
 
+-- | Represents the "requested_action" field in the
+--  'CheckRunEvent' payload.
 newtype HookCheckRunRequestedAction = HookCheckRunRequestedAction
     { whCheckRunRequestedActionIdentifier       :: Text
     }
@@ -606,7 +623,7 @@ newtype HookCheckRunRequestedAction = HookCheckRunRequestedAction
 
 instance NFData HookCheckRunRequestedAction where rnf = genericRnf
 
--- | Represents the "installation" field in the 'CheckSuiteEvent' payload.
+-- | Represents the "installation" field in the checks payloads.
 newtype HookChecksInstallation = HookChecksInstallation
     { whChecksInstallationId    :: Int
     }
@@ -614,6 +631,7 @@ newtype HookChecksInstallation = HookChecksInstallation
 
 instance NFData HookChecksInstallation where rnf = genericRnf
 
+-- | Represents the "pull_requests" field in the checks payloads.
 data HookChecksPullRequest = HookChecksPullRequest
     { whChecksPullRequestUrl              :: !URL
     , whChecksPullRequestId               :: !Int
@@ -625,6 +643,7 @@ data HookChecksPullRequest = HookChecksPullRequest
 
 instance NFData HookChecksPullRequest where rnf = genericRnf
 
+-- | Represents the "repo" field in the checks pull_request payloads.
 data HookChecksPullRequestRepository = HookChecksPullRequestRepository
     { whChecksPullRequestRepositoryId                  :: !Int
     , whChecksPullRequestRepositoryUrl                 :: !URL
@@ -634,6 +653,8 @@ data HookChecksPullRequestRepository = HookChecksPullRequestRepository
 
 instance NFData HookChecksPullRequestRepository where rnf = genericRnf
 
+-- | Represents the repo targets in
+--  the checks pull requests repository payloads.
 data  HookChecksPullRequestTarget = HookChecksPullRequestTarget
     { whChecksPullRequestTargetSha  :: !Text
     , whChecksPullRequestTargetRef  :: !Text -- ex "somebranch"
