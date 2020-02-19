@@ -34,7 +34,7 @@ module GitHub.Data.Webhooks.Payload
     , HookCheckSuiteConclusion(..)
     , HookCheckSuite(..)
     , HookCheckSuiteCommit(..)
-    , HookCheckSuiteInstallation(..)
+    , HookChecksInstallation(..)
     , HookChecksPullRequest(..)
     , HookChecksPullRequestRepository(..)
     , HookChecksPullRequestTarget(..)
@@ -509,12 +509,12 @@ data HookCheckSuiteCommit = HookCheckSuiteCommit
 instance NFData HookCheckSuiteCommit where rnf = genericRnf
 
 -- | Represents the "installation" field in the 'CheckSuiteEvent' payload.
-newtype HookCheckSuiteInstallation = HookCheckSuiteInstallation
-    { whCheckSuiteInstallationId    :: Int
+newtype HookChecksInstallation = HookChecksInstallation
+    { whChecksInstallationId    :: Int
     }
     deriving (Eq, Show, Typeable, Data, Generic)
 
-instance NFData HookCheckSuiteInstallation where rnf = genericRnf
+instance NFData HookChecksInstallation where rnf = genericRnf
 
 data HookChecksPullRequest = HookChecksPullRequest
     { whChecksPullRequestUrl              :: !URL
@@ -1047,8 +1047,8 @@ instance FromJSON HookCheckSuiteCommit where
       <*> o .: "author"
       <*> o .: "committer"
 
-instance FromJSON HookCheckSuiteInstallation where
-  parseJSON = withObject "HookCheckSuiteInstallation" $ \o -> HookCheckSuiteInstallation
+instance FromJSON HookChecksInstallation where
+  parseJSON = withObject "HookChecksInstallation" $ \o -> HookChecksInstallation
       <$> o .: "id"
 
 instance FromJSON HookChecksPullRequest where

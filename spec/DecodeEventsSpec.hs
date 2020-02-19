@@ -265,8 +265,8 @@ checkSuiteEventFixture = CheckSuiteEvent
           }
     , evCheckSuiteInstallation =
         Just
-          HookCheckSuiteInstallation
-            { whCheckSuiteInstallationId = 1234123
+          HookChecksInstallation
+            { whChecksInstallationId = 1234123
             }
     }
 
