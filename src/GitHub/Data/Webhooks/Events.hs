@@ -199,6 +199,7 @@ instance FromJSON CheckRunEventAction where
 data CheckRunEvent = CheckRunEvent
     { evCheckRunAction              :: !CheckRunEventAction
     , evCheckRunCheckRun            :: !HookCheckRun
+    , evCheckRunRequestedAction     :: !(Maybe HookCheckRunRequestedAction)
     , evCheckRunRepository          :: !HookRepository
     , evCheckRunOrganization        :: !(Maybe HookOrganization)
     , evCheckRunSender              :: !HookUser

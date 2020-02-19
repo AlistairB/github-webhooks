@@ -1,5 +1,5 @@
 {
-  "action": "completed",
+  "action": "requested_action",
   "check_run": {
     "id": 123412411,
     "head_sha": "45deaf5013c757e58e2665849c3fd3add3edfa59",
@@ -23,8 +23,8 @@
       "id": 12341234111,
       "head_branch": "test-pr",
       "head_sha": "45deaf5013c757e58e2665849c3fd3add3edfa59",
-      "status": "completed",
-      "conclusion": "action_required",
+      "status": "queued",
+      "conclusion": null,
       "url": "https://api.github.com/repos/baxterthehacker/public-repo/check-suites/123451234",
       "before": "15c99c3e0b9d840d8465be47813cf39686815f2e",
       "after": "45deaf5013c757e58e2665849c3fd3add3edfa59",
@@ -92,8 +92,8 @@
           "check_suite"
         ]
       },
-      "created_at": "2020-02-18T04:40:55Z",
-      "updated_at": "2020-02-18T04:40:55Z"
+      "created_at": "2020-02-18T00:54:04Z",
+      "updated_at": "2020-02-18T00:54:04Z",
     },
     "app": {
       "id": 12345,
@@ -159,6 +159,9 @@
         }
       }
     ]
+  },
+  "requested_action": {
+    "identifier": "fix_errors"
   },
   "repository": {
     "id": 35129377,

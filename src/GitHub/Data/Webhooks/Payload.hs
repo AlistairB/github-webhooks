@@ -582,7 +582,6 @@ data HookCheckRun = HookCheckRun
     , whCheckRunOutput               :: !HookCheckRunOutput
     , whCheckRunName                 :: !Text
     , weCheckRunCheckSuite           :: !HookCheckSuite
-    , whCheckRunRequestedActions     :: !(Vector HookCheckRunRequestedAction)
     , whCheckRunPullRequests         :: !(Vector HookChecksPullRequest)
     }
     deriving (Eq, Show, Typeable, Data, Generic)
@@ -600,10 +599,8 @@ data HookCheckRunOutput = HookCheckRunOutput
 
 instance NFData HookCheckRunOutput where rnf = genericRnf
 
-data HookCheckRunRequestedAction = HookCheckRunRequestedAction
-    { whCheckRunRequestedActionIdentifier       :: !Text
-    , whCheckRunRequestedActionLabel            :: !Text
-    , whCheckRunRequestedActionDescription      :: !Text
+newtype HookCheckRunRequestedAction = HookCheckRunRequestedAction
+    { whCheckRunRequestedActionIdentifier       :: Text
     }
     deriving (Eq, Show, Typeable, Data, Generic)
 
