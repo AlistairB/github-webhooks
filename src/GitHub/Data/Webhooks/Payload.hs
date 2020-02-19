@@ -574,15 +574,35 @@ data HookCheckRun = HookCheckRun
     , whCheckRunConclusion           :: !(Maybe HookCheckRunConclusion)
     , whCheckRunStartedAt            :: !UTCTime
     , whCheckRunCompletedAt          :: !(Maybe UTCTime)
-    -- , whCheckRunOutput               :: !HookCheckRunOutput
+    , whCheckRunOutput               :: !HookCheckRunOutput
     , whCheckRunName                 :: !Text
     , weCheckRunCheckSuite           :: !HookCheckSuite
-    -- , whCheckRunRequestedActions      :: !(Vector HookCheckRunRequestedAction)
+    , whCheckRunRequestedActions     :: !(Vector HookCheckRunRequestedAction)
     , whCheckRunPullRequests         :: !(Vector HookChecksPullRequest)
     }
     deriving (Eq, Show, Typeable, Data, Generic)
 
 instance NFData HookCheckRun where rnf = genericRnf
+
+data HookCheckRunOutput = HookCheckRunOutput
+    { whCheckRunOutputTitle            :: !(Maybe Text)
+    , whCheckRunOutputSummary          :: !(Maybe Text)
+    , whCheckRunOutputText             :: !(Maybe Text)
+    , whCheckRunOutputAnnotationsCount :: !Int
+    , whCheckRunOutputAnnotationsUrl   :: !URL
+    }
+    deriving (Eq, Show, Typeable, Data, Generic)
+
+instance NFData HookCheckRunOutput where rnf = genericRnf
+
+data HookCheckRunRequestedAction = HookCheckRunRequestedAction
+    { whCheckRunRequestedActionIdentifier       :: !Text
+    , whCheckRunRequestedActionLabel            :: !Text
+    , whCheckRunRequestedActionDescription      :: !Text
+    }
+    deriving (Eq, Show, Typeable, Data, Generic)
+
+instance NFData HookCheckRunRequestedAction where rnf = genericRnf
 
 -- | Represents the "installation" field in the 'CheckSuiteEvent' payload.
 newtype HookChecksInstallation = HookChecksInstallation
