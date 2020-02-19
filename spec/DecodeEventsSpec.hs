@@ -123,24 +123,25 @@ checkSuiteEventFixture = CheckSuiteEvent
               ]
           , whCheckSuiteCreatedAt = read "2020-02-18 00:54:04"
           , whCheckSuiteUpdatedAt = read "2020-02-18 00:54:04"
-          , whCheckSuiteLatestCheckRunsCount = 0
-          , whCheckSuiteCheckRunsUrl = URL "https://api.github.com/repos/baxterthehacker/public-repo/check-suites/12341234111/check-runs"
+          , whCheckSuiteLatestCheckRunsCount = Just 0
+          , whCheckSuiteCheckRunsUrl = Just (URL "https://api.github.com/repos/baxterthehacker/public-repo/check-suites/12341234111/check-runs")
           , whCheckSuiteHeadCommit =
-              HookCheckSuiteCommit
-                { whCheckSuiteCommitSha = "45deaf5013c757e58e2665849c3fd3add3edfa59"
-                , whCheckSuiteCommitAuthor =
-                    HookSimpleUser
-                      { whSimplUserName = "baxterthehacker"
-                      , whSimplUserEmail = "baxterthehacker@users.noreply.github.com"
-                      , whSimplUserLogin = Nothing
-                      }
-                , whCheckSuiteCommitCommitter =
-                    HookSimpleUser
-                      { whSimplUserName = "baxterthehacker"
-                      , whSimplUserEmail = "baxterthehacker@users.noreply.github.com"
-                      , whSimplUserLogin = Nothing
-                      }
-                }
+              Just
+                HookCheckSuiteCommit
+                  { whCheckSuiteCommitSha = "45deaf5013c757e58e2665849c3fd3add3edfa59"
+                  , whCheckSuiteCommitAuthor =
+                      HookSimpleUser
+                        { whSimplUserName = "baxterthehacker"
+                        , whSimplUserEmail = "baxterthehacker@users.noreply.github.com"
+                        , whSimplUserLogin = Nothing
+                        }
+                  , whCheckSuiteCommitCommitter =
+                      HookSimpleUser
+                        { whSimplUserName = "baxterthehacker"
+                        , whSimplUserEmail = "baxterthehacker@users.noreply.github.com"
+                        , whSimplUserLogin = Nothing
+                        }
+                  }
           }
     , evCheckSuiteRepository =
         HookRepository

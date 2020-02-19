@@ -198,7 +198,7 @@ instance FromJSON CheckRunEventAction where
 -- See <https://developer.github.com/v3/activity/events/types/#checkrunevent>.
 data CheckRunEvent = CheckRunEvent
     { evCheckRunAction              :: !CheckRunEventAction
-    -- , evCheckRunCheckRun          :: !HookCheckRun
+    , evCheckRunCheckRun            :: !HookCheckRun
     , evCheckRunRepository          :: !HookRepository
     , evCheckRunOrganization        :: !(Maybe HookOrganization)
     , evCheckRunSender              :: !HookUser

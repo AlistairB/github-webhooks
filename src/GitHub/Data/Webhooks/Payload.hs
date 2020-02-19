@@ -34,6 +34,11 @@ module GitHub.Data.Webhooks.Payload
     , HookCheckSuiteConclusion(..)
     , HookCheckSuite(..)
     , HookCheckSuiteCommit(..)
+    , HookCheckRunStatus(..)
+    , HookCheckRunConclusion(..)
+    , HookCheckRun(..)
+    , HookCheckRunOutput(..)
+    , HookCheckRunRequestedAction(..)
     , HookChecksInstallation(..)
     , HookChecksPullRequest(..)
     , HookChecksPullRequestRepository(..)
@@ -490,9 +495,9 @@ data HookCheckSuite = HookCheckSuite
     , whCheckSuitePullRequests         :: !(Vector HookChecksPullRequest)
     , whCheckSuiteCreatedAt            :: !UTCTime
     , whCheckSuiteUpdatedAt            :: !UTCTime
-    , whCheckSuiteLatestCheckRunsCount :: !Int
-    , whCheckSuiteCheckRunsUrl         :: !URL
-    , whCheckSuiteHeadCommit           :: !HookCheckSuiteCommit
+    , whCheckSuiteLatestCheckRunsCount :: !(Maybe Int) -- not included in the check run nested payload
+    , whCheckSuiteCheckRunsUrl         :: !(Maybe URL) -- not included in the check run nested payload
+    , whCheckSuiteHeadCommit           :: !(Maybe HookCheckSuiteCommit) -- not included in the check run nested payload
     }
     deriving (Eq, Show, Typeable, Data, Generic)
 
